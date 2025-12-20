@@ -1,0 +1,73 @@
+### PiggyBank API Tests
+
+@baseUrl = http://localhost:8080
+@token = {{login.response.body.token}}
+
+### 1. Register User
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "phoneNumber": "+250788123456",
+  "locationId": 1
+}
+
+### 2. Login User
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### 3. Get All Users
+GET {{baseUrl}}/api/users
+Authorization: Bearer {{token}}
+
+### 4. Get User by ID
+GET {{baseUrl}}/api/users/1
+Authorization: Bearer {{token}}
+
+### 5. Get Users by Province
+GET {{baseUrl}}/api/users/location/province/Kigali
+Authorization: Bearer {{token}}
+
+### 6. Count Users by Province
+GET {{baseUrl}}/api/users/location/province/Kigali/count
+Authorization: Bearer {{token}}
+
+### 7. Deposit Money
+POST {{baseUrl}}/api/accounts/1/deposit?amount=1000
+Authorization: Bearer {{token}}
+
+### 8. Withdraw Money
+POST {{baseUrl}}/api/accounts/1/withdraw?amount=500
+Authorization: Bearer {{token}}
+
+### 9. Get User Balance
+GET {{baseUrl}}/api/accounts/user/1/balance
+Authorization: Bearer {{token}}
+
+### 10. Admin Login
+# @name adminLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@piggybank.com",
+  "password": "admin123"
+}
+
+### 11. Get Richest Users (Admin Only)
+GET {{baseUrl}}/api/accounts/richest
+Authorization: Bearer {{adminLogin.response.body.token}}
+
+### 12. Get Analytics - Average Balance
+GET {{baseUrl}}/api/accounts/analytics/average-balance
+Authorization: Bearer {{adminLogin.response.body.token}}

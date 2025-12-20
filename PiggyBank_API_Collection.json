@@ -1,0 +1,265 @@
+{
+  "info": {
+    "name": "PiggyBank System API",
+    "description": "Complete API collection for PiggyBank System with JWT authentication",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "jwt_token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\",\n  \"phoneNumber\": \"+250788123456\",\n  \"locationId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('jwt_token', jsonData.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users (Admin Only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Users by Province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/location/province/Kigali",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "location", "province", "Kigali"]
+            }
+          }
+        },
+        {
+          "name": "Count Users by Province",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/location/province/Kigali/count",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "location", "province", "Kigali", "count"]
+            }
+          }
+        },
+        {
+          "name": "Get Users by District",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/location/district/Gasabo",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "location", "district", "Gasabo"]
+            }
+          }
+        },
+        {
+          "name": "Count Users by District",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/location/district/Gasabo/count",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "location", "district", "Gasabo", "count"]
+            }
+          }
+        },
+        {
+          "name": "Get Top Districts by User Count (Admin Only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/users/analytics/top-districts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "analytics", "top-districts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Deposit Money",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/accounts/1/deposit?amount=1000",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts", "1", "deposit"],
+              "query": [
+                {
+                  "key": "amount",
+                  "value": "1000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Withdraw Money",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/accounts/1/withdraw?amount=500",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts", "1", "withdraw"],
+              "query": [
+                {
+                  "key": "amount",
+                  "value": "500"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Balance",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/accounts/user/1/balance",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts", "user", "1", "balance"]
+            }
+          }
+        },
+        {
+          "name": "Get User Account",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/accounts/user/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts", "user", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Richest Users (Admin Only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/accounts/richest",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts", "richest"]
+            }
+          }
+        },
+        {
+          "name": "Get Average Balance (Admin Only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/accounts/analytics/average-balance",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts", "analytics", "average-balance"]
+            }
+          }
+        },
+        {
+          "name": "Get Total Balance (Admin Only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/accounts/analytics/total-balance",
+              "host": ["{{base_url}}"],
+              "path": ["api", "accounts", "analytics", "total-balance"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
